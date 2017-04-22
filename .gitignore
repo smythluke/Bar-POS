@@ -1,2 +1,5 @@
 .env/
 .git/
+app.db
+__pycache__/
+db_repository/

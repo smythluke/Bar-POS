@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+	<div class="row">
+	<h1>Add Category</h1>
+	<form action="" method="post" name="addcategory">
+      {{ addCategoryForm.hidden_tag() }}
+      <p>
+          New category name:<br>
+          {{ addCategoryForm.name(class_="input_form") }}<br>
+          {{ addCategoryForm.addCategory }}<br>
+      </p>
+  </form>
+  
+  <h1>Delete Category</h1>
+	<form action="" method="post" name="deletecategory">
+      {{ deleteCategoryForm.hidden_tag() }}
+      <p>
+          Choose Category:<br>
+          {{ deleteCategoryForm.id }}<br>
+          {{ deleteCategoryForm.deleteCategory }}<br>
+      </p>
+  </form>
+  
+  <h1>Add Item</h1>
+	<form action="" method="post" name="additem">
+      {{ addItemForm.hidden_tag() }}
+      <p>
+          New Item Details:<br>
+          {{ addItemForm.name }}<br>
+          {{ addItemForm.price }}<br>
+          {{ addItemForm.category_id }}<br>
+          {{ addItemForm.addItem }}<br>
+      </p>
+  </form>
+  
+  <h1>Delete Item</h1>
+	<form action="" method="post" name="deleteitem">
+      {{ deleteItemForm.hidden_tag() }}
+      <p>
+          Choose Item:<br>
+          {{ deleteItemForm.id }}<br>
+          {{ deleteItemForm.deleteItem }}<br>
+      </p>
+  </form>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-9">
+			<ul class="nav nav-tabs nav-justified" role="tablist" id="tabs">
+				{% for category in categories %}
+					<li role="presentation"><a href=#{{ category.name }} aria-controls={{ category.name }} role="tab" data-toggle="tab">{{ category.name }}</a></li>
+				{% endfor %}
+			</ul>
+			<div class="tab-content" id="tab-contents">
+				{% for category in categories %}
+					<div role="tabpanel" class="tab-pane fade itemsTab" id={{ category.name }}>
+						<div class="container-fluid">
+							<div class="row">
+								{% for item in category.items %}
+									{% if item.on_sale %}
+										<div class="col-md-2">
+											<div class="product" onclick=addToCart({{ item.id }}) id={{ item.id }} data-name={{ item.name }} data-price={{ item.price }}>
+												{{  item.name }}</br>&pound;{{ '%0.2f' %(item.price/100) }}
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div id="scrollCart">
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="cartHeader">Product</th>
+						<th class="cartHeader">Price</th>
+					</tr>
+				</thead>
+				<tbody id="cart">
+				
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>Total:</th>
+						<th id="totalPrice">&pound;0.00</th>
+					</tr>
+				</tfoot>
+			</table>
+			</div>
+			<div class="container-fluid">
+				<div class="row cartButtons">
+					<div class="col-md-6">
+						<button type="button" class="btn btn-success cartButton" onclick="completeSale()">Paid</button>
+					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-success cartButton" onclick="toTab()">Tab</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
+{% endblock %}
