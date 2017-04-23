@@ -40,21 +40,20 @@
 				<tbody id="cart">
 				
 				</tbody>
-				<tfoot>
-					<tr>
-						<th>Total:</th>
-						<th id="totalPrice">&pound;0.00</th>
-					</tr>
-				</tfoot>
 			</table>
 			</div>
 			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12" id="cartTotal">
+						Total: &pound;0.00
+					</div>
+				</div>
 				<div class="row cartButtons">
 					<div class="col-md-6">
-						<button type="button" class="btn btn-success cartButton" onclick="completeSale()">Paid</button>
+						<div type="button" class="btn-custom cartButton" onclick="completeSale()">Paid</div>
 					</div>
 					<div class="col-md-6">
-						<button type="button" class="btn btn-success cartButton" onclick="toTab()">Tab</button>
+						<div type="button" class="btn-custom cartButton" onclick="toTab()">Tab</div>
 					</div>
 				</div>
 			</div>

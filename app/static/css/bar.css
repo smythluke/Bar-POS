@@ -1,7 +1,73 @@
+ body {
+    overflow-x: hidden;
+	background-color: #1e1e33;
+ }
+
+a, a:focus, a:hover{
+	color: #eee;
+}
+
+table th{
+	color: #eee;
+}
+
+.nav-tabs>li.active>a{
+	background-color: #456587; 
+	color: #eee;
+}
+
+.nav-tabs.nav-justified>.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a, .nav-tabs>li.active>a:hover{
+	background-color: #456587;
+	color: #eee;
+}
+
+.nav-tabs.nav-justified>.active>a, .nav-tabs.nav-justified>.active>a:focus, .nav-tabs.nav-justified>.active>a:hover {
+	border: 1px solid #456587;
+}
+
+.nav-tabs.nav-justified>li>a{
+	border-bottom: 1px solid #456587;
+}
+
+.nav>li>a:focus, .nav>li>a:hover{
+	background-color: #39496b;
+	color: #eee;
+}
+
+.nav-tabs>li>a:hover {
+	border-color: #39496b;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd){
+	background-color: #456587;
+}
+
+.table .table {
+	background-color: #39496b;
+	color: #eee;
+	border-radius: 0 0 5px 5px;
+}
+
+.table .table .saleRow{
+	border-top: solid 1px #1e1e33;
+}
+
+.table>thead>tr>th {
+	border-bottom: 2px solid #39496b;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+	border-top: 1px solid #39496b;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+	vertical-align: middle;
+}
+
 .tab-content {
-	border-left: 1px solid #ddd;
-	border-right: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
+	border-left: 1px solid #456587;
+	border-right: 1px solid #456587;
+	border-bottom: 1px solid #456587;
 	padding: 10px;
 }
 
@@ -9,22 +75,67 @@
 	margin-bottom: 0;
 }
 
+.btn-custom{
+    background-color: #456587;
+	border: solid 1px #39496b;
+    border-radius: 5px;
+	color: #eee;
+	cursor: pointer;
+	padding: 5px;
+}
+
+.btn-custom:hover, .btn-custom:focus{
+	background-color: #39496b;
+}
+
+.btn-custom-tabs{
+    background-color: #39496b;
+	border: solid 1px #1e1e33;
+    border-radius: 5px;
+	color: #eee;
+	cursor: pointer;
+	padding: 5px;
+	text-align: center;
+	width: 60px;
+}
+
+.btn-custom-tabs:hover, .btn-custom-tabs:focus{
+	background-color: #1e1e33;
+}
+
 .product{
 	width: 100%;
-    background-color: #85ef34;
+    background-color: #456587;
     border-radius: 5px;
+	border: solid 1px #39496b;
     padding: 5px;
 	margin: 10px 0;
 	text-align: center;
 	cursor: pointer;
+	color: #eee;
+}
+
+.product:hover, .product:focus{
+	background-color: #39496b;
 }
 
 .cartHeader{
 	padding: 9.33px 0 !important;
 }
 
-#scrollCart{
-	height: 200px;
+#cart{
+	color: #eee;
+}
+
+#cartTotal{
+	color: #eee;
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	padding: 10px;
+	border-top: 2px solid #39496b;
+	border-bottom: 2px solid #39496b;
+	margin-bottom: 15px;
 }
 
 .cartButtons{
@@ -52,7 +163,8 @@
 	transition: transform .3s ease-in-out;
 	vertical-align: middle;
 	border: 0 none;
-	background-color: #000;
+	background-color: #5ed5db;
+	border-radius: 0 5px 5px 0;
 }
 
 /**
@@ -75,7 +187,7 @@
 	height: 3px;
 	margin: 3px auto 3px auto;
 	transition: transform .3s ease-in-out;
-	background: #FFFFFF;
+	background: #456587;
 }
 
 .hamburger.active .icon {
@@ -89,10 +201,6 @@
 .hamburger.active:after {
 	transform: translate(-7px, -2px) rotate(-135deg) scaleX(0.65);
 }
-
- body {
-    overflow-x: hidden;
- }
 
 /* Toggle Styles */
 
@@ -116,7 +224,7 @@
     height: 100%;
     margin-left: -250px;
     overflow-y: auto;
-    background: #000;
+    background: #5ed5db;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -158,12 +266,12 @@
 .sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #aaa;
+    color: #1e1e33;
 }
 
 .sidebar-nav li a:hover {
     text-decoration: none;
-    color: #fff;
+    color: #000;
     background: rgba(255,255,255,0.2);
 }
 

@@ -27,7 +27,7 @@ def tabs():
 		tabs=tabs)
 	
 
-@app.route("/admin")
+@app.route("/admin", methods=['GET', 'POST'])
 def admin():
 	addCategoryForm = AddCategoryForm()
 	deleteCategoryForm = DeleteCategoryForm()

@@ -10,7 +10,7 @@ $(document).ready(function(){
 		$("#hamburger").toggleClass("active");
 	});
 	
-	$("#scrollCart").height(window.innerHeight - 98);
+	$("#scrollCart").height(window.innerHeight - 157);
 	$('.itemsTab').each(function(i, obj) {
 		console.log(obj);
 		$(this).height(window.innerHeight - 126);
@@ -19,6 +19,11 @@ $(document).ready(function(){
 	$('.collapse').on('show.bs.collapse', function () {
 		$('.collapse.in').collapse('hide');
 	});
+	
+	// $(document).ready(function() {
+		// $('#example').DataTable();     used to make dataTables table
+	// } );
+	
 });
 
 var Cart = {
@@ -74,7 +79,7 @@ var Cart = {
 			this.cartElement.append(row);
 			total+=(this.items[i].price * this.items[i].quantity);
 		}
-		$("#totalPrice").html("&pound;" + parseFloat(total / 100).toFixed(2));
+		$("#cartTotal").html("Total: &pound;" + parseFloat(total / 100).toFixed(2));
 	},
 	empty: function(){
 		this.items = [];

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container-fluid">
+<div class="container">
 	<div class="row">
 		<div class="col-md-12">
 			<table class="table table-striped" style="border-collapse:collapse;">
@@ -16,7 +16,7 @@
 						<tr data-toggle="collapse" data-target=".{{ tab }}">
 							<th>{{ tab }}</th>
 							<th>&pound;{{ '%0.2f' %(tabs[tab]['value']/100) }}</th>
-							<th><button class="btn btn-success" type="button" onclick="payTab('{{ tab }}')">Pay</button></th>
+							<th><div class="btn-custom-tabs" type="button" onclick="payTab('{{ tab }}')">Pay</div></th>
 						</tr>
 						<tr>
 							<td colspan="3"  class="hiddenRow">
@@ -33,13 +33,15 @@
 											{% for sale in tabs[tab]['sales'] %}
 												{% for saleItem in sale.items %}
 													<tr>
-														<td>
-															{% if loop.first %}
+														{% if loop.first %}
+															<td class="saleRow">
 																{{ sale.time.strftime('%d/%m/%y - %H:%M') }}
-															{% endif %}
-														</td>
-														<td>{{ saleItem.quantity }} &times; {{ saleItem.name }}</td>
-														<td>&pound;{{ '%0.2f' %(saleItem.price_total/100) }}</td>
+															</td>
+														{% else %}
+															<td></td>
+														{% endif %}
+														<td {% if loop.first %} class="saleRow" {% endif %}>{{ saleItem.quantity }} &times; {{ saleItem.name }}</td>
+														<td {% if loop.first %} class="saleRow" {% endif %}>&pound;{{ '%0.2f' %(saleItem.price_total/100) }}</td>
 													</tr>
 												{% endfor %}
 											{% endfor %}
