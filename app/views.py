@@ -2,13 +2,10 @@ import json, datetime
 from app import app, db
 from flask import render_template, redirect, request
 from .models import Category, Item, Sale, Sale_Item
-from .forms import AddCategoryForm, DeleteCategoryForm, AddItemForm, DeleteItemForm
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
 	categories = Category.query.order_by(Category.weight).all()
-	
-	
 	return render_template("transactions.html", title="Transactions", 
 		categories=categories)
 
@@ -26,54 +23,26 @@ def tabs():
 	return render_template("tabs.html", title="Tabs",
 		tabs=tabs)
 	
-
+@app.route("/sales")
+@app.route("/sales/<fromDate>/<toDate>")
+def sales(fromDate = None, toDate = None):
+	if(fromDate and toDate):
+		fromDate = datetime.datetime.strptime(fromDate, "%Y-%m-%d").date()
+		toDate = datetime.datetime.strptime(toDate, "%Y-%m-%d").date() + datetime.timedelta(days=1)
+		sales = Sale.query.filter(Sale.time >= fromDate, Sale.time <= toDate).all()
+		return render_template("sales.html", title="Sales",
+			sales=sales)
+	return render_template("sales.html", title="Sales",
+			sales=None)
+	
+	
 @app.route("/admin", methods=['GET', 'POST'])
 def admin():
-	addCategoryForm = AddCategoryForm()
-	deleteCategoryForm = DeleteCategoryForm()
-	addItemForm = AddItemForm()
-	deleteItemForm = DeleteItemForm()
-	
-	deleteCategoryForm.id.choices = [(c.id, c.name) for c in Category.query.order_by('weight').all()]
-	addItemForm.category_id.choices = [(c.id, c.name) for c in Category.query.order_by('weight').all()]
-	deleteItemForm.id.choices = [(i.id, i.name) for i in Item.query.all()]
-	
-	if addCategoryForm.addCategory.data and addCategoryForm.validate_on_submit():
-		if Category.query.order_by(Category.weight.desc()).first() is None:
-			newWeight = 1
-		else:
-			newWeight = Category.query.order_by(Category.weight.desc()).first().weight + 1
-		c = Category(name=addCategoryForm.name.data, weight=newWeight)
-		db.session.add(c)
-		db.session.commit()
-		return redirect('/')
-		
-	if deleteCategoryForm.deleteCategory.data and deleteCategoryForm.validate_on_submit():
-		c = Category.query.get(deleteCategoryForm.id.data)
-		db.session.delete(c)
-		db.session.commit()
-		return redirect('/')
-		
-	if addItemForm.addItem.data and addItemForm.validate_on_submit():
-		p = int(addItemForm.price.data * 100)
-		print(p)
-		c = Category.query.get(addItemForm.category_id.data)
-		i = Item(name=addItemForm.name.data, price=p, on_sale=True, category=c)
-		db.session.add(i)
-		db.session.commit()
-		return redirect('/')
-		
-	if deleteItemForm.deleteItem.data and deleteItemForm.validate_on_submit():
-		i = Item.query.get(deleteItemForm.id.data)
-		db.session.delete(i)
-		db.session.commit()
-		return redirect('/')
-		
+	categories = Category.query.order_by(Category.weight).all()
+	items = Item.query.order_by(Item.category_id).all()
 	return render_template("admin.html", title="Administration",
-		addCategoryForm=addCategoryForm,
-		deleteCategoryForm=deleteCategoryForm,
-		addItemForm=addItemForm,
-		deleteItemForm=deleteItemForm)
+		categories=categories,
+		items=items)
 	
 @app.route("/sale", methods=['POST'])
 def sale():
@@ -101,3 +70,71 @@ def payTab():
 			sale.paid = True
 			db.session.commit()
 	return "complete"
+	
+@app.route("/additem", methods=['POST'])
+def addItem():
+	data = request.get_json(force=True)
+	price = int(float(data['price']) * 100)
+	category = Category.query.filter_by(name=data['category']).first()
+	item = Item(name=data['name'], price=price, on_sale=True, category=category)
+	db.session.add(item)
+	db.session.commit()
+	
+	return "complete"
+	
+@app.route("/edititem", methods=['POST'])
+def editItem():
+	data = request.get_json(force=True)
+	if data['operation'] == "edit":
+		item = Item.query.filter_by(id=data['id']).first()
+		item.name = data['name']
+		item.price = data['price']
+		item.category = Category.query.filter_by(id=data['category']).first()
+		item.on_sale = data['on_sale']
+		db.session.commit()
+		return "complete"
+	elif data['operation'] == "delete":
+		item = Item.query.filter_by(id=data['id']).first()
+		for saleitem in item.sales:
+			db.session.delete(saleitem.sale)
+			db.session.delete(saleitem)
+		db.session.delete(item)
+		db.session.commit()
+		return "complete"
+	
+@app.route("/addcategory", methods=['POST'])
+def addCategory():
+	data = request.get_json(force=True)
+	
+	if Category.query.order_by(Category.weight.desc()).first() is None:
+		newWeight = 1
+	else:
+		newWeight = Category.query.order_by(Category.weight.desc()).first().weight + 1
+	category = Category(name=data['name'], weight=newWeight)
+	db.session.add(category)
+	db.session.commit()
+	
+	return "complete"
+	
+@app.route("/editcategory", methods=['POST'])
+def editCategory():
+	data = request.get_json(force=True)
+	if data['operation'] == "edit":
+		category = Category.query.filter_by(id=data['id']).first()
+		if Category.query.filter_by(weight=data['name']).first() is None:
+			category.name = data['name']
+		if Category.query.filter_by(weight=data['weight']).first() is None:
+			category.weight = data['weight']
+		db.session.commit()
+		return "complete"
+	elif data['operation'] == "delete":
+		category = Category.query.filter_by(id=data['id']).first()
+		items = category.items
+		for item in items:
+			for saleitem in item.sales:
+				db.session.delete(saleitem.sale)
+				db.session.delete(saleitem)
+			db.session.delete(item)
+		db.session.delete(category)
+		db.session.commit()
+		return "complete"

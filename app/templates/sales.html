@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block css %}
+	{{ super() }}
+	<link rel="stylesheet" href="/static/css/sales.css">
+{% endblock %}
+{% block javascript %}
+	{{ super() }}
+	<script src="/static/js/validator.min.js"></script>
+	<script src="/static/js/sales.js"></script>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs nav-justified" role="tablist" id="tabs">
+				<li role="presentation"><a href="#browseByDateTab" aria-controls="browseByDateTab" role="tab" data-toggle="tab">Browse By Date</a></li>
+				<li role="presentation"><a href="#somethingElseTab" aria-controls="somethingElseTab" role="tab" data-toggle="tab">Something Else</a></li>
+			</ul>
+			<div class="tab-content" id="tab-contents">
+				<div role="tabpanel" class="tab-pane fade contentTab" id="browseByDateTab">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-12">
+								{% if sales %}
+									{{ sales }}
+								{% else %}
+									<form class="form-horizontal" data-toggle="validator">
+										<div class="form-group">
+											<label for="fromDate" class="col-sm-2 control-label">Show sales from</label>
+											<div class="col-sm-9">
+												<input type="date" class="form-control" id="fromDate" placeholder="01/01/2017" required>
+												<div class="help-block with-errors"></div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="toDate" class="col-sm-2 control-label">Show sales to</label>
+											<div class="col-sm-9">
+												<input type="date" class="form-control" id="toDate" placeholder="31/03/2017" required>
+												<div class="help-block with-errors"></div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-offset-2 col-sm-9">
+												<button type="submit" class="btn btn-custom" onclick="getSales(event, $(this))">Go!</button>
+											</div>
+										</div>
+									</form>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane fade contentTab" id="somethingElseTab">
+					How else would you want to see sales?
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

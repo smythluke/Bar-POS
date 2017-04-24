@@ -5,11 +5,11 @@
 	{% else %}
 		<title>Bar POS</title>
 	{% endif %}
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="/static/css/bar.css">
+	{% block css %}
+		<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="/static/css/common.css">
+	{% endblock %}
 
 </head>
 <body>
@@ -25,6 +25,9 @@
 					<a href="/tabs">Tabs</a>
 				</li>
 				<li>
+					<a href="/sales">Browse Sales</a>
+				</li>
+				<li>
 					<a href="/admin">Administration</a>
 				</li>
 			</ul>
@@ -37,11 +40,11 @@
 			{% block content %}{% endblock %}
 		</div>
 	</div>
-	<!-- jQuery 3.2.1 requiredby BootStrap -->
-	<script src="/static/js/jquery-3.2.1.min.js"></script>
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="/static/js/bootstrap.min.js"></script>
-	<script src="/static/js/bar.js"></script>
+	{% block javascript %}
+		<script src="/static/js/jquery-3.2.1.min.js"></script>
+		<script src="/static/js/bootstrap.min.js"></script>
+		<script src="/static/js/common.js"></script>
+	{% endblock %}
 </body>
 </html>
 

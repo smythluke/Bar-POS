@@ -1,28 +1,25 @@
 $(document).ready(function(){
-    $("#tabs").children().first().addClass("active");
+	$("#tabs").children().first().addClass("active");
     $("#tab-contents").children().first().addClass("in active");
+	
+	// Javascript to enable link to tab
+	var url = document.location.toString();
+	if (url.match('#')) {
+		$('.nav-tabs a[href="#' + url.split('#')[1]).tab('show');
+	} //add a suffix
+	
+	// Change hash for page-reload
+	$('.nav-tabs a').on('shown.bs.tab', function (e) {
+		window.location.hash = e.target.hash;
+	})
 	
 	Cart.init();
 	
-	$("#hamburger").click(function(e) {
-		e.preventDefault();
-		$("#wrapper").toggleClass("toggled");
-		$("#hamburger").toggleClass("active");
-	});
-	
 	$("#scrollCart").height(window.innerHeight - 157);
+	
 	$('.itemsTab').each(function(i, obj) {
-		console.log(obj);
 		$(this).height(window.innerHeight - 126);
 	});
-	
-	$('.collapse').on('show.bs.collapse', function () {
-		$('.collapse.in').collapse('hide');
-	});
-	
-	// $(document).ready(function() {
-		// $('#example').DataTable();     used to make dataTables table
-	// } );
 	
 });
 
@@ -84,8 +81,8 @@ var Cart = {
 	empty: function(){
 		this.items = [];
 	}
-};	
-	
+};
+
 function addToCart(id){
 	Cart.addItem(id, $("#" + id).data().name, $("#" + id).data().price);
 	Cart.display();
@@ -112,15 +109,4 @@ function toTab(){
 	data.paid=false;
 	data.tab_name=tabName;
 	$.post('sale', JSON.stringify(data), function(){location.reload();});
-}
-
-function payTab(tabName){
-	var c = confirm("Pay off tab: " + tabName + "?");
-	if(c){
-		var data = new Object();
-		data.tabName = tabName;
-		$.post('paytab', JSON.stringify(data), function(){location.reload();});
-	} else {
-		return "canceled";
-	}
 }

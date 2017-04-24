@@ -1,18 +1,10 @@
  body {
     overflow-x: hidden;
 	background-color: #1e1e33;
+	color: #eee;
  }
 
-a, a:focus, a:hover{
-	color: #eee;
-}
-
-table th{
-	color: #eee;
-}
-
-.nav-tabs>li.active>a{
-	background-color: #456587; 
+a, a:focus, a:hover, table, th{
 	color: #eee;
 }
 
@@ -40,6 +32,7 @@ table th{
 
 .table-striped>tbody>tr:nth-of-type(odd){
 	background-color: #456587;
+	cursor: pointer;
 }
 
 .table .table {
@@ -58,9 +51,6 @@ table th{
 
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
 	border-top: 1px solid #39496b;
-}
-
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
 	vertical-align: middle;
 }
 
@@ -101,58 +91,6 @@ table th{
 
 .btn-custom-tabs:hover, .btn-custom-tabs:focus{
 	background-color: #1e1e33;
-}
-
-.product{
-	width: 100%;
-    background-color: #456587;
-    border-radius: 5px;
-	border: solid 1px #39496b;
-    padding: 5px;
-	margin: 10px 0;
-	text-align: center;
-	cursor: pointer;
-	color: #eee;
-}
-
-.product:hover, .product:focus{
-	background-color: #39496b;
-}
-
-.cartHeader{
-	padding: 9.33px 0 !important;
-}
-
-#cart{
-	color: #eee;
-}
-
-#cartTotal{
-	color: #eee;
-	font-size: 16px;
-	font-weight: bold;
-	text-align: center;
-	padding: 10px;
-	border-top: 2px solid #39496b;
-	border-bottom: 2px solid #39496b;
-	margin-bottom: 15px;
-}
-
-.cartButtons{
-	text-align: center;
-}
-
-.cartButton{
-	width: 90%;
-}
-
-.temsTab{
-	overflow-y: auto;
-}
-
-.hiddenRow {
-    padding: 0 !important;
-	border: none !important;
 }
 
 .hamburger {

@@ -1,48 +1,160 @@
 {% extends "base.html" %}
+{% block css %}
+	{{ super() }}
+	<link rel="stylesheet" href="/static/css/admin.css">
+	<link rel="stylesheet" href="/static/css/dataTables.bootstrap.min.css">
+{% endblock %}
+{% block javascript %}
+	{{ super() }}
+	<script src="/static/js/validator.min.js"></script>
+	<script src="/static/js/dataTables.min.js"></script>
+	<script src="/static/js/dataTables.bootstrap.min.js"></script>
+	<script src="/static/js/admin.js"></script>
+{% endblock %}
 {% block content %}
 <div class="container-fluid">
 	<div class="row">
-	<h1>Add Category</h1>
-	<form action="" method="post" name="addcategory">
-      {{ addCategoryForm.hidden_tag() }}
-      <p>
-          New category name:<br>
-          {{ addCategoryForm.name(class_="input_form") }}<br>
-          {{ addCategoryForm.addCategory }}<br>
-      </p>
-  </form>
-  
-  <h1>Delete Category</h1>
-	<form action="" method="post" name="deletecategory">
-      {{ deleteCategoryForm.hidden_tag() }}
-      <p>
-          Choose Category:<br>
-          {{ deleteCategoryForm.id }}<br>
-          {{ deleteCategoryForm.deleteCategory }}<br>
-      </p>
-  </form>
-  
-  <h1>Add Item</h1>
-	<form action="" method="post" name="additem">
-      {{ addItemForm.hidden_tag() }}
-      <p>
-          New Item Details:<br>
-          {{ addItemForm.name }}<br>
-          {{ addItemForm.price }}<br>
-          {{ addItemForm.category_id }}<br>
-          {{ addItemForm.addItem }}<br>
-      </p>
-  </form>
-  
-  <h1>Delete Item</h1>
-	<form action="" method="post" name="deleteitem">
-      {{ deleteItemForm.hidden_tag() }}
-      <p>
-          Choose Item:<br>
-          {{ deleteItemForm.id }}<br>
-          {{ deleteItemForm.deleteItem }}<br>
-      </p>
-  </form>
+		<div class="col-md-12">
+			<ul class="nav nav-tabs nav-justified" role="tablist" id="tabs">
+				<li role="presentation"><a href="#addItemTab" aria-controls="addItemTab" role="tab" data-toggle="tab">Add Item</a></li>
+				<li role="presentation"><a href="#editItemTab" aria-controls="editItemTab" role="tab" data-toggle="tab">Edit Item</a></li>
+				<li role="presentation"><a href="#addCategoryTab" aria-controls="addCategoryTab" role="tab" data-toggle="tab">Add Category</a></li>
+				<li role="presentation"><a href="#editCategoryTab" aria-controls="editCategoryTab" role="tab" data-toggle="tab">Edit Category</a></li>
+			</ul>
+			<div class="tab-content" id="tab-contents">
+				<div role="tabpanel" class="tab-pane fade contentTab" id="addItemTab">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-horizontal" data-toggle="validator">
+									<div class="form-group">
+										<label for="addItemName" class="col-sm-2 control-label">Product Name</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" id="addItemName" placeholder="" required>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="addItemPrice" class="col-sm-2 control-label">Price (&pound;)</label>
+										<div class="col-sm-9">
+											<input type="number" step="0.01" min="0.00" class="form-control" id="addItemPrice" placeholder="0.00" required>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="addItemCategory" class="col-sm-2 control-label">Category</label>
+										<div class="col-sm-9">
+											<select class="form-control" id="addItemCategory">
+												{% for category in categories %}
+													<option>{{ category.name }}</option>
+												{% endfor %}
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-offset-2 col-sm-9">
+											<button type="submit" class="btn btn-custom" onclick="addItem(event, $(this))">Add Item</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane fade contentTab" id="editItemTab">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-10 col-md-offset-1">
+								<table class="table" id="editItemTable">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Price (£)</th>
+											<th>Category</th>
+											<th>cat</th>
+											<th>On Sale</th>
+											<th>Delete</th>
+										</tr>
+									<thead>
+									<tbody>
+										{% for item in items %}
+											<tr class="editItemRow" data-itemid={{ item.id }}>
+												<td contenteditable="true" class="editItemRowTd">{{ item.name }}</td>
+												<td contenteditable="true" class="editItemRowTd">{{ '%0.2f' %(item.price/100) }}</td>
+												<td>
+													<form style="margin-bottom: 0;">
+														<select class="form-control editItemRowFormInput">
+															{% for category in categories %}
+																<option value={{ category.id }} {% if item.category == category %}selected="selected"{% endif %}>{{ category.name }}</option>
+															{% endfor %}
+														</select>
+													</form>
+												</td>
+												<td>{{ item.category.name }}</td>
+												<td>
+													<form>
+														<input class="editItemRowFormInput" type="checkbox" {% if item.on_sale %} checked {% endif %}>
+													</form>
+												</td>
+												<td><div class="btn btn-custom" onclick="editItem('delete', {{ item.id }}, '{{ item.name }}', {{ item.price }}, {{ item.category.id }}, {% if item.on_sale %} true {% else %} false {% endif %})">Delete</div></td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane fade contentTab" id="addCategoryTab">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-12">
+								<form class="form-horizontal" data-toggle="validator">
+									<div class="form-group">
+										<label for="addCategoryName" class="col-sm-2 control-label">Category Name</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" id="addCategoryName" placeholder="" required>
+											<div class="help-block with-errors"></div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-sm-offset-2 col-sm-9">
+											<button type="submit" class="btn btn-custom" onclick="addCategory(event, $(this))">Add Category</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane fade contentTab" id="editCategoryTab">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-10 col-md-offset-1">
+								<table class="table" id="editCategoryTable">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Weight (order they appear)</th>
+											<th>Delete</th>
+										</tr>
+									<thead>
+									<tbody>
+										{% for category in categories %}
+											<tr class="editCategoryRow" data-categoryid={{ category.id }}>
+												<td contenteditable="true" >{{ category.name }}</td>
+												<td contenteditable="true">{{ category.weight }}</td>
+												<td><div class="btn btn-custom" onclick="editCategory('delete', {{ category.id }}, '{{ category.name }}', {{ category.weight }})">Delete</div></td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock %}

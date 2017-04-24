@@ -1,4 +1,12 @@
 {% extends "base.html" %}
+{% block css %}
+	{{ super() }}
+	<link rel="stylesheet" href="/static/css/transactions.css">
+{% endblock %}
+{% block javascript %}
+	{{ super() }}
+	<script src="/static/js/transactions.js"></script>
+{% endblock %}
 {% block content %}
 <div class="container-fluid">
 	<div class="row">
@@ -15,7 +23,7 @@
 							<div class="row">
 								{% for item in category.items %}
 									{% if item.on_sale %}
-										<div class="col-md-2">
+										<div class="col-sm-2">
 											<div class="product" onclick=addToCart({{ item.id }}) id={{ item.id }} data-name={{ item.name }} data-price={{ item.price }}>
 												{{  item.name }}</br>&pound;{{ '%0.2f' %(item.price/100) }}
 											</div>
