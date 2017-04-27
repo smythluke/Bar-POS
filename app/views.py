@@ -1,11 +1,13 @@
 import json, datetime
 from app import app, db
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, abort
 from .models import Category, Item, Sale, Sale_Item
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
 	categories = Category.query.order_by(Category.weight).all()
+	if not categories:
+		return redirect("/admin#addCategoryTab")
 	return render_template("transactions.html", title="Transactions", 
 		categories=categories)
 
@@ -29,9 +31,26 @@ def sales(fromDate = None, toDate = None):
 	if(fromDate and toDate):
 		fromDate = datetime.datetime.strptime(fromDate, "%Y-%m-%d").date()
 		toDate = datetime.datetime.strptime(toDate, "%Y-%m-%d").date() + datetime.timedelta(days=1)
-		sales = Sale.query.filter(Sale.time >= fromDate, Sale.time <= toDate).all()
+		sales = Sale.query.filter(Sale.time >= fromDate, Sale.time < toDate).all()
+		detailsPerItem = {}
+		for sale in sales:
+			for saleItem in sale.items:
+				if saleItem.name in detailsPerItem:
+					addedQuantity = False
+					for obj in detailsPerItem[saleItem.name]:
+						if saleItem.price_single == obj['price']:
+							obj['quantity'] += saleItem.quantity
+							addedQuantity = True
+					if not addedQuantity:
+						detailsPerItem[saleItem.name].append({"price" : saleItem.price_single, "quantity" : saleItem.quantity})
+						
+				else:
+					detailsPerItem[saleItem.name] = [{"price" : saleItem.price_single, "quantity" : saleItem.quantity}]
 		return render_template("sales.html", title="Sales",
-			sales=sales)
+			sales=sales,
+			fromDate=fromDate,
+			toDate=toDate-datetime.timedelta(days=1),
+			details=detailsPerItem)
 	return render_template("sales.html", title="Sales",
 			sales=None)
 	
@@ -105,7 +124,8 @@ def editItem():
 @app.route("/addcategory", methods=['POST'])
 def addCategory():
 	data = request.get_json(force=True)
-	
+	if Category.query.filter_by(name=data['name']).first() is not None:
+		abort(400)
 	if Category.query.order_by(Category.weight.desc()).first() is None:
 		newWeight = 1
 	else:
@@ -120,11 +140,13 @@ def addCategory():
 def editCategory():
 	data = request.get_json(force=True)
 	if data['operation'] == "edit":
+		if (Category.query.filter(Category.name == data['name']).filter(Category.id != data['id']).first() is not None) or (Category.query.filter(Category.weight == data['weight']).filter(Category.id != data['id']).first() is not None):
+			abort(400)
 		category = Category.query.filter_by(id=data['id']).first()
-		if Category.query.filter_by(weight=data['name']).first() is None:
-			category.name = data['name']
-		if Category.query.filter_by(weight=data['weight']).first() is None:
-			category.weight = data['weight']
+		#if Category.query.filter_by(name=data['name']).first() is None:
+		category.name = data['name']
+		#if Category.query.filter_by(weight=data['weight']).first() is None:
+		category.weight = data['weight']
 		db.session.commit()
 		return "complete"
 	elif data['operation'] == "delete":

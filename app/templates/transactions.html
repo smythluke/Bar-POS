@@ -5,29 +5,39 @@
 {% endblock %}
 {% block javascript %}
 	{{ super() }}
+	<script src="/static/js/jquery.matchHeight-min.js"></script>
 	<script src="/static/js/transactions.js"></script>
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-9">
-			<ul class="nav nav-tabs nav-justified" role="tablist" id="tabs">
+			<ul class="nav nav-pills" role="tablist" id="tabs">
 				{% for category in categories %}
-					<li role="presentation"><a href=#{{ category.name }} aria-controls={{ category.name }} role="tab" data-toggle="tab">{{ category.name }}</a></li>
+					<li role="presentation" {% if loop.first %}class="active" {% endif %}><a href=#category_{{ loop.index }} aria-controls=category_{{ loop.index }} role="tab" data-toggle="tab">{{ category.name }}</a></li>
 				{% endfor %}
 			</ul>
 			<div class="tab-content" id="tab-contents">
 				{% for category in categories %}
-					<div role="tabpanel" class="tab-pane fade itemsTab" id={{ category.name }}>
+					<div role="tabpanel" class="tab-pane fade {% if loop.first %}in active{% endif %} itemsTab" id=category_{{ loop.index }}>
 						<div class="container-fluid">
-							<div class="row">
-								{% for item in category.items %}
+							<div class="row items-row">
+								{% for item in category.items|sort(attribute='name') %}
 									{% if item.on_sale %}
 										<div class="col-sm-2">
-											<div class="product" onclick=addToCart({{ item.id }}) id={{ item.id }} data-name={{ item.name }} data-price={{ item.price }}>
-												{{  item.name }}</br>&pound;{{ '%0.2f' %(item.price/100) }}
+											<div class="product" onclick=addToCart("item_{{ item.id }}") id="item_{{ item.id }}" data-name="{{ item.name }}" data-price={{ item.price }}>
+												{{ item.name }}</br>&pound;{{ '%0.2f' %(item.price/100) }}
 											</div>
 										</div>
+										{% if loop.last %}
+											{% for n in range(6 - loop.index%6) %}
+												<div class="col-sm-2"></div>
+											{% endfor %}
+										{% endif %}
+										{% if loop.index%6 == 0 %}
+											</div>
+											<div class="row items-row">
+										{% endif %}
 									{% endif %}
 								{% endfor %}
 							</div>
@@ -38,17 +48,17 @@
 		</div>
 		<div class="col-md-3">
 			<div id="scrollCart">
-			<table class="table table-condensed">
-				<thead>
-					<tr>
-						<th class="cartHeader">Product</th>
-						<th class="cartHeader">Price</th>
-					</tr>
-				</thead>
-				<tbody id="cart">
-				
-				</tbody>
-			</table>
+				<table class="table table-condensed table-fixed">
+					<thead>
+						<tr>
+							<th class="cartHeader">Product</th>
+							<th class="cartHeader">Price</th>
+						</tr>
+					</thead>
+					<tbody id="cart">
+					
+					</tbody>
+				</table>
 			</div>
 			<div class="container-fluid">
 				<div class="row">

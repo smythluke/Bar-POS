@@ -1,25 +1,27 @@
 $(document).ready(function(){
-	$("#tabs").children().first().addClass("active");
-    $("#tab-contents").children().first().addClass("in active");
 	
-	// Javascript to enable link to tab
-	var url = document.location.toString();
-	if (url.match('#')) {
-		$('.nav-tabs a[href="#' + url.split('#')[1]).tab('show');
-	} //add a suffix
+	// // Javascript to enable link to tab
+	// var url = document.location.toString();
+	// if (url.match('#')) {
+		// $('.nav-tabs a[href="#' + url.split('#')[1]).tab('show');
+	// } //add a suffix
 	
-	// Change hash for page-reload
-	$('.nav-tabs a').on('shown.bs.tab', function (e) {
-		window.location.hash = e.target.hash;
-	})
+	// // Change hash for page-reload
+	// $('.nav-tabs a').on('shown.bs.tab', function (e) {
+		// window.location.hash = e.target.hash;
+	// })
 	
 	Cart.init();
 	
 	$("#scrollCart").height(window.innerHeight - 157);
 	
+	$("#tab-contents").height(window.innerHeight - $("#tabs").innerHeight() - $("#hamburger").outerHeight(true) - 41);
+	
 	$('.itemsTab').each(function(i, obj) {
-		$(this).height(window.innerHeight - 126);
+		$(this).height(window.innerHeight - $("#tabs").innerHeight() - $("#hamburger").outerHeight(true) - 41);
 	});
+	
+	$('.product').matchHeight(false);
 	
 });
 
@@ -68,7 +70,7 @@ var Cart = {
 		this.cartElement.empty();
 		var total = 0;
 		for(i in this.items){
-			var row = $('<tr title="Click to Decrement">').click(makeClickHandler(this.items[i].id));
+			var row = $('<tr class="cartItem" title="Click to Decrement">').click(makeClickHandler(this.items[i].id));
 			row.append(
 				$('<td>').html(this.items[i].quantity + " &times; " + this.items[i].name),
 				$('<td>').html("&pound;" + parseFloat(this.items[i].price * this.items[i].quantity / 100).toFixed(2))

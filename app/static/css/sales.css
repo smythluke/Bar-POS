@@ -1,3 +1,8 @@
 .contentTab{
 	overflow-y: auto;
 }
+
+.hiddenRow {
+    padding: 0 !important;
+	border: none !important;
+}

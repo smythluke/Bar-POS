@@ -8,6 +8,9 @@
 	text-align: center;
 	cursor: pointer;
 	color: #eee;
+	display:flex;
+	justify-content:center;
+	align-items:center;
 }
 
 .product:hover, .product:focus{
@@ -16,6 +19,10 @@
 
 .cartHeader{
 	padding: 9.33px 0 !important;
+}
+
+.nav{
+	margin-bottom: 10px !important;
 }
 
 #cart{
@@ -42,5 +49,18 @@
 }
 
 .itemsTab{
+	overflow-y: auto;
+}
+
+.tab-content{
+	border: 1px solid #456587;
+	padding: 10px;
+}
+
+.cartItem{
+	cursor: pointer;
+}
+
+#scrollCart{
 	overflow-y: auto;
 }
