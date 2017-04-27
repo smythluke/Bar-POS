@@ -21,14 +21,14 @@
 				</thead>
 				<tbody>
 					{% for tab in tabs %}
-						<tr data-toggle="collapse" data-target=".{{ tab }}">
+						<tr data-toggle="collapse" data-target="#tab_{{ loop.index }}">
 							<th>{{ tab }}</th>
 							<th>&pound;{{ '%0.2f' %(tabs[tab]['value']/100) }}</th>
 							<th><div class="btn-custom-tabs" type="button" onclick="payTab('{{ tab }}')">Pay</div></th>
 						</tr>
 						<tr>
 							<td colspan="3"  class="hiddenRow">
-								<div class="container-fluid collapse {{ tab }}">
+								<div class="container-fluid collapse" id="tab_{{ loop.index }}">
 									<table class="table">
 										<thead>
 											<tr>

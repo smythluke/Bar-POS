@@ -34,7 +34,9 @@
 															<thead>
 																<tr>
 																	<td>Product</td>
-																	<td>Sales</td>
+																	<td>Price Single</td>
+																	<td>Quantity</td>
+																	<td>Price Total</td>
 																</tr>
 															<thead>
 															<tbody>						
@@ -49,7 +51,13 @@
 																				<td></td>
 																			{% endif %}
 																			<td {% if loop.first %} class="saleRow" {% endif %}>
-																				{{ sale.quantity }} at &pound;{{ '%0.2f' %(sale.price/100) }}
+																				&pound;{{ '%0.2f' %(sale.price/100) }}
+																			</td>
+																			<td {% if loop.first %} class="saleRow" {% endif %}>
+																				{{ sale.quantity }}
+																			</td>
+																			<td {% if loop.first %} class="saleRow" {% endif %}>
+																				&pound;{{ '%0.2f' %((sale.price*sale.quantity)/100) }}
 																			</td>
 																		</tr>
 																	{% endfor %}

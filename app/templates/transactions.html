@@ -22,19 +22,21 @@
 					<div role="tabpanel" class="tab-pane fade {% if loop.first %}in active{% endif %} itemsTab" id=category_{{ loop.index }}>
 						<div class="container-fluid">
 							<div class="row items-row">
+								{% set i = 0 %}
 								{% for item in category.items|sort(attribute='name') %}
 									{% if item.on_sale %}
+										{% set i = i+1 %}
 										<div class="col-sm-2">
 											<div class="product" onclick=addToCart("item_{{ item.id }}") id="item_{{ item.id }}" data-name="{{ item.name }}" data-price={{ item.price }}>
 												{{ item.name }}</br>&pound;{{ '%0.2f' %(item.price/100) }}
 											</div>
 										</div>
 										{% if loop.last %}
-											{% for n in range(6 - loop.index%6) %}
+											{% for n in range(6 - i%6) %}
 												<div class="col-sm-2"></div>
 											{% endfor %}
 										{% endif %}
-										{% if loop.index%6 == 0 %}
+										{% if i%6 == 0 %}
 											</div>
 											<div class="row items-row">
 										{% endif %}
