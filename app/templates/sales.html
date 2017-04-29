@@ -40,7 +40,7 @@
 																</tr>
 															<thead>
 															<tbody>						
-																{% for itemName, sales in details.items() %}
+																{% for itemName, sales in details|dictsort %}
 																	{% for sale in sales %}
 																		<tr>
 																			{% if loop.first %}

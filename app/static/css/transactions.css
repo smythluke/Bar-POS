@@ -11,6 +11,7 @@
 	display:flex;
 	justify-content:center;
 	align-items:center;
+	font-size: 16px;
 }
 
 .product:hover, .product:focus{
