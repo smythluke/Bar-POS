@@ -12,18 +12,23 @@ $(document).ready(function(){
 	// })
 	
 	Cart.init();
+
 	
-	$("#scrollCart").height(window.innerHeight - 157);
+	setHeights();
 	
-	$("#tab-contents").height(window.innerHeight - $("#tabs").innerHeight() - $("#hamburger").outerHeight(true) - 41);
+	$( window ).resize(function(){setHeights();});
 	
-	$('.itemsTab').each(function(i, obj) {
-		$(this).height(window.innerHeight - $("#tabs").innerHeight() - $("#hamburger").outerHeight(true) - 41);
-	});
-	
-	$('.product').matchHeight(false);
-	
+	$("#hamburger").click(function(){setTimeout(setHeights, 501);});
 });
+
+function setHeights(){
+	$('.product').matchHeight(false);
+	$("#scrollCart").height(window.innerHeight - $("#hamburger").outerHeight(true) - $("#cartTotal").outerHeight(true) - $("#cartButtons").outerHeight(true) - 10);
+	$("#tab-contents").height(window.innerHeight - $("#hamburger").outerHeight(true) - $("#tabs").outerHeight(true) - 31);
+	$('.itemsTab').each(function(i, obj) {
+		$(this).height($("#tab-contents").height());
+	});
+}
 
 var Cart = {
 	items:[],
