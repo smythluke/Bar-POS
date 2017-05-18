@@ -10,12 +10,12 @@
 {% block content %}
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12" id="tabsTable">
 			<table class="table table-striped" style="border-collapse:collapse;">
 				<thead>
 					<tr>
 						<th>Tab</th>
-						<th>Value</th>
+						<th>Price</th>
 						<th>Options</th>
 					</tr>
 				</thead>
@@ -32,25 +32,50 @@
 									<table class="table">
 										<thead>
 											<tr>
-												<td>Sale Time</td>
-												<td>Product</td>
-												<td>Price</td>
+												<th>Date</th>
+												<th>Time</th>
+												<th>Product</th>
+												<th>Price</th>
 											</tr>
 										<thead>
-										<tbody>											
-											{% for sale in tabs[tab]['sales'] %}
-												{% for saleItem in sale.items %}
+										<tbody>	
+											{% for date in tabs[tab]['dates'] %}
+												{% for sale in tabs[tab]['dates'][date] %}
+													{% set dateLoop=loop %}
+													{% for saleItem in sale.items %}
+														<tr>
+															{% if dateLoop.first and loop.first %}
+																<td class="saleRow">
+																	{{ sale.time.strftime('%d/%m/%y') }}
+																</td>
+															{% else %}
+																<td></td>
+															{% endif %}
+															{% if loop.first %}
+																<td class="saleRow">
+																	{{ sale.time.strftime('%H:%M') }}
+																</td>
+															{% else %}
+																<td></td>
+															{% endif %}
+															<td {% if loop.first %} class="saleRow" {% endif %}>{{ saleItem.quantity }} &times; {{ saleItem.name }}</td>
+															<td {% if loop.first %} class="saleRow" {% endif %}>&pound;{{ '%0.2f' %(saleItem.price_total/100) }}</td>
+														</tr>
+													{% endfor %}
 													<tr>
-														{% if loop.first %}
-															<td class="saleRow">
-																{{ sale.time.strftime('%d/%m/%y - %H:%M') }}
-															</td>
-														{% else %}
-															<td></td>
-														{% endif %}
-														<td {% if loop.first %} class="saleRow" {% endif %}>{{ saleItem.quantity }} &times; {{ saleItem.name }}</td>
-														<td {% if loop.first %} class="saleRow" {% endif %}>&pound;{{ '%0.2f' %(saleItem.price_total/100) }}</td>
+														<td></td>
+														<td></td>
+														<td class="saleRow">Total</td>
+														<td class="saleRow">&pound;{{ '%0.2f' %(sale.value/100) }}</td>
 													</tr>
+													{% if loop.last %}
+														<tr>
+															<th></th>
+															<th class="saleRow"></th>
+															<th class="saleRow">Total for day</th>
+															<th class="saleRow">&pound;{{ '%0.2f' %(totalsPerDay[sale.time.date()]/100) }}</th>
+														</tr>
+													{% endif %}
 												{% endfor %}
 											{% endfor %}
 										</tbody>

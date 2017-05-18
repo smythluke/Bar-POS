@@ -2,6 +2,7 @@ $(document).ready(function(){
 	$('.collapse').on('show.bs.collapse', function () {
 		$('.collapse.in').collapse('hide');
 	});
+	$("#tabsTable").height(window.innerHeight - $("#hamburger").outerHeight(true));
 });
 
 function payTab(tabName){
