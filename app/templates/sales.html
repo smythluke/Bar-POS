@@ -21,11 +21,11 @@
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-md-12">
-								{% if sales %}
+								{% if total != 0 %}
 									<table class="table table-striped" style="border-collapse:collapse;">
 										<tbody>
 											<tr>
-												<th style="cursor: auto;">Products sold between {{ fromDate.strftime('%d/%m/%y') }} and {{ toDate.strftime('%d/%m/%y') }}</th>
+												<th style="cursor: auto;">Products sold between {{ fromDate.strftime('%d/%m/%y') }} and {{ toDate.strftime('%d/%m/%y') }} totaling &pound;{{ '%0.2f' %(total/100) }}</th>
 											</tr>
 											<tr>
 												<td class="hiddenRow">
@@ -40,8 +40,8 @@
 																</tr>
 															<thead>
 															<tbody>						
-																{% for itemName, sales in details|dictsort %}
-																	{% for sale in sales %}
+																{% for itemName, priceQuantities in items|dictsort %}{# because dictsort does something funny #}
+																	{% for priceQuantity in priceQuantities %}
 																		<tr>
 																			{% if loop.first %}
 																				<td class="saleRow">
@@ -51,13 +51,13 @@
 																				<td></td>
 																			{% endif %}
 																			<td {% if loop.first %} class="saleRow" {% endif %}>
-																				&pound;{{ '%0.2f' %(sale.price/100) }}
+																				&pound;{{ '%0.2f' %(priceQuantity['price']/100) }}
 																			</td>
 																			<td {% if loop.first %} class="saleRow" {% endif %}>
-																				{{ sale.quantity }}
+																				{{ priceQuantity['quantity'] }}
 																			</td>
 																			<td {% if loop.first %} class="saleRow" {% endif %}>
-																				&pound;{{ '%0.2f' %((sale.price*sale.quantity)/100) }}
+																				&pound;{{ '%0.2f' %((priceQuantity['price']*priceQuantity['quantity'])/100) }}
 																			</td>
 																		</tr>
 																	{% endfor %}

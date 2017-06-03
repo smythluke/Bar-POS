@@ -39,27 +39,29 @@ def sales(fromDate = None, toDate = None):
 		fromDate = datetime.datetime.strptime(fromDate, "%Y-%m-%d").date()
 		toDate = datetime.datetime.strptime(toDate, "%Y-%m-%d").date() + datetime.timedelta(days=1)
 		sales = Sale.query.filter(Sale.time >= fromDate, Sale.time < toDate).all()
-		detailsPerItem = {}
+		items = {}
+		total = 0
+		
 		for sale in sales:
 			for saleItem in sale.items:
-				if saleItem.name in detailsPerItem:
-					addedQuantity = False
-					for obj in detailsPerItem[saleItem.name]:
-						if saleItem.price_single == obj['price']:
-							obj['quantity'] += saleItem.quantity
-							addedQuantity = True
-					if not addedQuantity:
-						detailsPerItem[saleItem.name].append({"price" : saleItem.price_single, "quantity" : saleItem.quantity})
-						
-				else:
-					detailsPerItem[saleItem.name] = [{"price" : saleItem.price_single, "quantity" : saleItem.quantity}]
+				if saleItem.name not in items:
+					items[saleItem.name] = []
+				addedQuantity = False
+				for priceQuantity in items[saleItem.name]:
+					if saleItem.price_single == priceQuantity['price']:
+						priceQuantity['quantity'] += saleItem.quantity
+						addedQuantity = True
+				if not addedQuantity:
+					items[saleItem.name].append({"price" : saleItem.price_single, "quantity" : saleItem.quantity})
+				total += saleItem.price_total
 		return render_template("sales.html", title="Sales",
-			sales=sales,
 			fromDate=fromDate,
 			toDate=toDate-datetime.timedelta(days=1),
-			details=detailsPerItem)
+			total=total,
+			items=items)
+		
 	return render_template("sales.html", title="Sales",
-			sales=None)
+			total=0)
 	
 	
 @app.route("/admin", methods=['GET', 'POST'])
