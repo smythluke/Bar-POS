@@ -6,3 +6,7 @@
 #tabsTable {
 	overflow-y: auto;
 }
+
+.table>tbody>tr>.totalRow{
+	padding-bottom: 30px;
+}

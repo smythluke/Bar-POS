@@ -15,24 +15,22 @@ def index():
 def tabs():
 	unpaidSales = Sale.query.filter_by(paid=False).all()
 	tabs = {}
-	totalsPerDay = {}
+	
 	for sale in unpaidSales:
 		if sale.tab_name not in tabs:
 			tabs[sale.tab_name] = {}
-			tabs[sale.tab_name]['dates'] = {}
-			tabs[sale.tab_name]['dates'][sale.time.date()] = []
-			tabs[sale.tab_name]['value'] = 0
-		elif sale.time.date() not in tabs[sale.tab_name]['dates']:
-			tabs[sale.tab_name]['dates'][sale.time.date()] = []
-		tabs[sale.tab_name]['dates'][sale.time.date()].append(sale)
-		tabs[sale.tab_name]['value'] = tabs[sale.tab_name]['value'] + sale.value
-		if sale.time.date() not in totalsPerDay:
-			totalsPerDay[sale.time.date()] = sale.value
-		else:
-			totalsPerDay[sale.time.date()] = totalsPerDay[sale.time.date()] + sale.value
+			tabs[sale.tab_name]['days'] = {}
+			tabs[sale.tab_name]['tabTotal'] = 0
+		if sale.time.date() not in tabs[sale.tab_name]['days']:
+			tabs[sale.tab_name]['days'][sale.time.date()] = {}
+			tabs[sale.tab_name]['days'][sale.time.date()]['sales'] = []
+			tabs[sale.tab_name]['days'][sale.time.date()]['dayTotal'] = 0
+		tabs[sale.tab_name]['days'][sale.time.date()]['sales'].append(sale)
+		tabs[sale.tab_name]['days'][sale.time.date()]['dayTotal'] += sale.value
+		tabs[sale.tab_name]['tabTotal'] += sale.value
+	
 	return render_template("tabs.html", title="Tabs",
-		tabs=tabs,
-		totalsPerDay=totalsPerDay)
+		tabs=tabs)
 	
 @app.route("/sales")
 @app.route("/sales/<fromDate>/<toDate>")

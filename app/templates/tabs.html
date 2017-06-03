@@ -23,7 +23,7 @@
 					{% for tab in tabs %}
 						<tr data-toggle="collapse" data-target="#tab_{{ loop.index }}">
 							<th>{{ tab }}</th>
-							<th>&pound;{{ '%0.2f' %(tabs[tab]['value']/100) }}</th>
+							<th>&pound;{{ '%0.2f' %(tabs[tab]['tabTotal']/100) }}</th>
 							<th><div class="btn-custom-tabs" type="button" onclick="payTab('{{ tab }}')">Pay</div></th>
 						</tr>
 						<tr>
@@ -39,8 +39,8 @@
 											</tr>
 										<thead>
 										<tbody>	
-											{% for date in tabs[tab]['dates'] %}
-												{% for sale in tabs[tab]['dates'][date] %}
+											{% for day in tabs[tab]['days'] %}
+												{% for sale in tabs[tab]['days'][day]['sales'] %}
 													{% set dateLoop=loop %}
 													{% for saleItem in sale.items %}
 														<tr>
@@ -65,18 +65,16 @@
 													<tr>
 														<td></td>
 														<td></td>
-														<td class="saleRow">Total</td>
-														<td class="saleRow">&pound;{{ '%0.2f' %(sale.value/100) }}</td>
+														<td class="saleRow totalRow">Total</td>
+														<td class="saleRow totalRow">&pound;{{ '%0.2f' %(sale.value/100) }}</td>
 													</tr>
-													{% if loop.last %}
-														<tr>
-															<th></th>
-															<th class="saleRow"></th>
-															<th class="saleRow">Total for day</th>
-															<th class="saleRow">&pound;{{ '%0.2f' %(totalsPerDay[sale.time.date()]/100) }}</th>
-														</tr>
-													{% endif %}
 												{% endfor %}
+												<tr>
+													<th></th>
+													<th class="saleRow totalRow"></th>
+													<th class="saleRow totalRow">Total for day</th>
+													<th class="saleRow totalRow">&pound;{{ '%0.2f' %(tabs[tab]['days'][day]['dayTotal']/100) }}</th>
+												</tr>
 											{% endfor %}
 										</tbody>
 									</table>
